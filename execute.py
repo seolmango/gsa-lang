@@ -39,9 +39,9 @@ def execute(code_line, vars = {}):
             if code.split(" ")[1].endswith("방으로"):
                 vars[code.split(" ")[0][0:-1]] = vars[code.split(' ')[0][0:-1]] + vars[code.split(" ")[1][0:-3]]
             else:
-                vars[code.split(" ")[0][0:-1]] = vars[code.split(' ')[0][0:-1]] + vars[code.split(" ")[1][0:-2]]
+                vars[code.split(" ")[0][0:-1]] = vars[code.split(' ')[0][0:-1]] + float(code.split(" ")[1][0:-2])
         elif code.find("너 지금 이방만") != -1:
-            vars[code.split(" ")[0][0:-1]] = vars[code.split(" ")[0][0:-1]] * float(code.split(" ")[4][0:-3])
+            vars[code.split(" ")[0][0:-1]] = vars[code.split(" ")[0][0:-1]] * float(code.split(" ")[4][0:-4])
         elif code.find("너 맨날") != -1:
             vars[code.split(" ")[0][0:-1]] = vars[code.split(" ")[0][0:-1]] * float(vars[code.split(" ")[3][0:-1]])
         return vars

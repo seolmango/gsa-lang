@@ -23,9 +23,9 @@ def parser(file: str):
                 fin_result.append({'type': 1, 'text': line, 'line': index})
             elif line.endswith("로 이방하지마."):
                 fin_result.append({'type': 3, 'text': line, 'line': index})
-            elif line.startswith("너 지금 이방만"):
+            elif line.find("너 지금 이방만") != -1:
                 fin_result.append({'type': 3, 'text': line, 'line': index})
-            elif line.startswith("너 맨날"):
+            elif line.find("너 맨날") != -1:
                 fin_result.append({'type': 3, 'text': line, 'line': index})
             elif line.endswith("퇴사."):
                 fin_result.append({'type': 2, 'text': line, 'line': index})
