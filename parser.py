@@ -8,6 +8,7 @@ def parser(file: str):
     # 연산 3
     # 코드 시작 4
     # 코드 끝 5
+    # 타입 변경 6
     line_data = file.split('\n')
     for index, line in enumerate(line_data):
         if not code_start and not line == '사감실에서 알립니다.':
@@ -31,6 +32,12 @@ def parser(file: str):
                 fin_result.append({'type': 2, 'text': line, 'line': index})
             elif line.endswith("너 뭐야."):
                 fin_result.append({'type': 2, 'text': line, 'line': index})
+            elif line.endswith("너는 이방 횟수 계산도 못하니.") or line.endswith("너는 말이 말로 안들리니."):
+                fin_result.append({'type': 6, 'text': line, 'line': index})
+            elif line.endswith("수학처럼 국어도 공부해봐.") or line.endswith("국어도 수학이야."):
+                fin_result.append({'type': 6, 'text': line, 'line': index})
+            elif line.endswith("이렇게 만들었어."):
+                fin_result.append({'type': 1, 'text': line, 'line': index})
             else:
                 fin_result.append({'type': 0, 'text': line, 'line': index})
         else:

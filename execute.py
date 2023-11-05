@@ -3,23 +3,27 @@ import re
 def execute(code_line, vars = {}):
     # 각 줄이 저장됨. {type: 명령 타입, text: 코드 내용,line: 줄 번호}
     # 주석 0
-    # 변수 선언 1
+    # 변수 처리 1
     # 입출력 2
     # 연산 3
     # 코드 시작 4
     # 코드 끝 5
+    # 타입 변경 6
     code = code_line["text"]
     if code_line["type"] == 0:
         return vars
     elif code_line["type"] == 1:
-        # (숫자)호 (변수이름) 사감실로 오시기 바랍니다.
-        # "(문자열)"한 (변수이름) 사감실로 오시기 바랍니다.
-        if code.startswith('"'):
-            string = re.search(r'"([^"]*)"', code)
-            if string:
-                vars[code.split(" ")[-4]] = string.group(1)
-        else:
-            vars[code.split(" ")[1]] = float(code.split(" ")[0][:-1])
+        if code.endswith("사감실로 오시기 바랍니다."):
+            # (숫자)호 (변수이름) 사감실로 오시기 바랍니다.
+            # "(문자열)"한 (변수이름) 사감실로 오시기 바랍니다.
+            if code.startswith('"'):
+                string = re.search(r'"([^"]*)"', code)
+                if string:
+                    vars[code.split(" ")[-4]] = string.group(1)
+            else:
+                vars[code.split(" ")[1]] = float(code.split(" ")[0][:-1])
+        elif code.endswith("이렇게 만들었어."):
+            vars[code.split(" ")[2][:-1]] = vars[code.split(" ")[0][:-1]]
         return vars
     elif code_line["type"] == 2:
         # (변수이름) 퇴사.
@@ -48,4 +52,18 @@ def execute(code_line, vars = {}):
     elif code_line["type"] == 4:
         return vars
     elif code_line["type"] == 5:
+        return vars
+    elif code_line["type"] == 6:
+        if code.endswith("너는 이방 횟수 계산도 못하니."):
+            vars[code.split(" ")[0]] = str(vars[code.split(" ")[0]])
+        elif code.endswith("너는 말이 말로 안들리니."):
+            vars[code.split(" ")[0]] = int(vars[code.split(" ")[0]])
+        elif code.endswith("수학처럼 국어도 공부해봐."):
+            vars[code.split(" ")[0]] = chr(int(vars[code.split(" ")[0]]))
+        elif code.endswith("국어도 수학이야."):
+            temp = 0
+            temp_string = vars[code.split(" ")[0]]
+            for i in range(len(temp_string)):
+                temp += ord(str(temp_string[i]))
+            vars[code.split(" ")[0]] = temp
         return vars
