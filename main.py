@@ -12,5 +12,7 @@ with open(gsa_file_path, 'r', encoding='UTF-8') as f:
 parsed_gsa_file = parser(gsa_file)
 
 code_vars = {}
-for index, code_line in enumerate(parsed_gsa_file):
-    code_vars = execute(code_line, code_vars)
+index = 0
+while code_vars != "EOF":
+    code_vars, new_index = execute(parsed_gsa_file[index], index, code_vars)
+    index = new_index

@@ -17,7 +17,7 @@ def parser(file: str):
             if line == "사감실에서 알립니다.":
                 fin_result.append({'type': 4, 'text': line, 'line': index})
                 code_start = True
-            elif line == "소등하고 취침하기 바랍니다.":
+            elif line.endswith("소등하고 취침하기 바랍니다."):
                 fin_result.append({'type': 5, 'text': line, 'line': index})
                 return fin_result
             elif line.endswith("사감실로 오시기 바랍니다."):
