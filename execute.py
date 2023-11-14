@@ -9,7 +9,7 @@ def execute(code_line, index, vars = {}):
     # 코드 시작 4
     # 코드 끝 5
     # 타입 변경 6
-    code = code_line["text"]
+    code = code_line["text"].strip()
     if code_line["type"] == 0:
         return vars, index + 1
     elif code_line["type"] == 1:
@@ -67,3 +67,21 @@ def execute(code_line, index, vars = {}):
                 temp += ord(str(temp_string[i]))
             vars[code.split(" ")[0]] = temp
         return vars, index + 1
+    elif code_line['type'] == 7:
+        if_expre = code.split("?")[0]
+        if if_expre.endswith("호라고"):
+            if_exp_res = (vars[if_expre.split(" ")[0][:-2]] == int(if_expre.split(" ")[1][:-3]))
+        elif if_expre.endswith("라고 했다고"):
+            if_exp_res = (vars[if_expre.split(" ")[0][:-1]] == str(if_expre.split(" ")[1][1:-3]))
+        elif if_expre.endswith("랑 같은 짓을 했다고"):
+            if_exp_res = (vars[if_expre.split(" ")[0][:-1]] == vars[if_expre.split(" ")[1][:-1]])
+        if_index = 0
+        if if_exp_res:
+            if_code_lines = code_line['true']
+        elif not if_exp_res and not code_line['false'] == None:
+            if_code_lines = code_line['false']
+        else:
+            if_code_lines = {}
+        while if_index < len(if_code_lines):
+            vars, if_index = execute(if_code_lines[if_index], if_index, vars)
+        return vars, index+1
