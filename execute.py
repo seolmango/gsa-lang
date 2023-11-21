@@ -68,13 +68,28 @@ def execute(code_line, index, vars = {}):
             vars[code.split(" ")[0]] = temp
         return vars, index + 1
     elif code_line['type'] == 7:
-        if_expre = code.split("?")[0]
-        if if_expre.endswith("호라고"):
-            if_exp_res = (vars[if_expre.split(" ")[0][:-2]] == int(if_expre.split(" ")[1][:-3]))
-        elif if_expre.endswith("라고 했다고"):
-            if_exp_res = (vars[if_expre.split(" ")[0][:-1]] == str(if_expre.split(" ")[1][1:-3]))
-        elif if_expre.endswith("랑 같은 짓을 했다고"):
-            if_exp_res = (vars[if_expre.split(" ")[0][:-1]] == vars[if_expre.split(" ")[1][:-1]])
+        if_exp_res = False
+        if_expression_count = code.count("?")
+        if_expression = code.split("?")
+        if_expression = list(map(lambda x: x.strip(), if_expression))
+        for i in range(if_expression_count):
+            multi_if_or = True
+            if if_expression[i].startswith("그리고"):
+                multi_if_or = False
+                if_expression[i] = if_expression[i][4:]
+            elif if_expression[i].startswith("또는"):
+                if_expression[i] = if_expression[i][3:]
+            if_expre = if_expression[i]
+            if if_expre.endswith("호라고"):
+                if_exp_res_temp = (vars[if_expre.split(" ")[0][:-2]] == int(if_expre.split(" ")[1][:-3]))
+            elif if_expre.endswith("라고 했다고"):
+                if_exp_res_temp = (vars[if_expre.split(" ")[0][:-1]] == str(if_expre.split(" ")[1][1:-3]))
+            elif if_expre.endswith("랑 같은 짓을 했다고"):
+                if_exp_res_temp = (vars[if_expre.split(" ")[0][:-1]] == vars[if_expre.split(" ")[1][:-1]])
+            if multi_if_or:
+                if_exp_res = if_exp_res or if_exp_res_temp
+            else:
+                if_exp_res = if_exp_res and if_exp_res_temp
         if_index = 0
         if if_exp_res:
             if_code_lines = code_line['true']
