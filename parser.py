@@ -19,7 +19,7 @@ def parser(file: str, option: bool = False):
     # 코드 끝 5
     # 타입 변경 6
     # 조건문 7
-    # goto문 8
+    # while문 8
     line_data = file.split('\n')
     index = 0
     while index < len(line_data):
@@ -67,13 +67,13 @@ def parser(file: str, option: bool = False):
                 code_level = count_leading_spaces(line)
                 true_lines_start = index + 1
                 true_lines_end = true_lines_start
-                while count_leading_spaces(line_data[true_lines_end]) == code_level+1:
+                while true_lines_end < len(line_data) and count_leading_spaces(line_data[true_lines_end]) >= code_level+1:
                     true_lines_end += 1
                 true_line_data = parser('\n'.join(line_data[true_lines_start:true_lines_end]),True)
                 if line_data[true_lines_end].endswith("근데 아니면.") and count_leading_spaces(line_data[true_lines_end]) == code_level:
                     false_lines_start = true_lines_end + 1
                     false_lines_end = false_lines_start
-                    while count_leading_spaces(line_data[false_lines_end]) == code_level+1:
+                    while false_lines_end < len(line_data) and count_leading_spaces(line_data[false_lines_end]) >= code_level+1:
                         false_lines_end += 1
                     false_line_data = parser('\n'.join(line_data[false_lines_start:false_lines_end]),True)
                     fin_result.append({'type': 7, 'text': line, 'line': index, 'true': true_line_data, 'false': false_line_data})
@@ -81,7 +81,15 @@ def parser(file: str, option: bool = False):
                 else:
                     fin_result.append({'type': 7, 'text': line, 'line': index, 'true': true_line_data, 'false': None})
                     index = true_lines_end
-
+            elif line.endswith("자꾸 했던 말 반복하게 할래."):
+                code_level = count_leading_spaces(line)
+                true_lines_start = index + 1
+                true_lines_end = true_lines_start
+                while true_lines_end < len(line_data) and count_leading_spaces(line_data[true_lines_end]) >= code_level+1:
+                    true_lines_end += 1
+                true_line_data = parser('\n'.join(line_data[true_lines_start:true_lines_end]),True)
+                fin_result.append({'type': 8, 'text': line, 'line': index, 'true': true_line_data})
+                index = true_lines_end
             else:
                 fin_result.append({'type': 0, 'text': line, 'line': index})
                 index += 1
